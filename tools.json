@@ -1,0 +1,24 @@
+[
+  {
+    "name": "ChatGPT",
+    "rating": 4.3,
+    "description": "대화형 AI로 텍스트를 생성하고 질문에 답변합니다.",
+    "features": ["자연어 이해 능력 뛰어남", "다양한 언어 지원", "실시간 대화 가능"],
+    "tags": ["글쓰기", "대화", "코딩"],
+    "officialLink": "https://chat.openai.com",
+    "affiliateLink": "https://chat.openai.com?aff=your-affiliate-id", // 가정된 제휴 링크
+    "category": "텍스트 생성",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg"
+  },
+  {
+    "name": "Grok",
+    "rating": 4.8,
+    "description": "인간과 유사한 대화를 제공하는 AI",
+    "features": ["외부 시각 제공", "다양한 질문 답변", "코딩 지원 가능"],
+    "tags": ["대화", "코딩", "생산성"],
+    "officialLink": "https://Grok.com",
+    "affiliateLink": "https://Grok.com?aff=your-affiliate-id", // 가정된 제휴 링크
+    "category": "텍스트 생성",
+    "image": "https://xai.ai/static/images/xai-logo-white.png" // 수정: xAI 로고 (실제 URL로 교체 필요)
+  }
+]

@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI 툴 카드 샘플</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      width: 100%;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-actions select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      width: 100%;
+      max-width: 200px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .search-container {
+      position: relative;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .header-search {
+      padding: 8px 40px 8px 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .header-search:focus {
+      border-color: #6200ea;
+      outline: none;
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #666;
+      font-size: 1rem;
+      pointer-events: none;
+    }
+
+    /* 추가: 광고 배너 스타일링 */
+    #ad-banner {
+      width: 100%;
+      max-width: 728px;
+      height: 90px;
+      background-color: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 0;
+      border-radius: 10px;
+    }
+
+    #category-section {
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+      background-color: #f9f9f9;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .category-btn {
+      background: linear-gradient(135deg, #6200ea, #7b21ff);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .category-btn:hover {
+      background: linear-gradient(135deg, #4500a0, #5e1bff);
+      transform: scale(1.05);
+    }
+
+    .category-btn.active {
+      background: linear-gradient(135deg, #4500a0, #5e1bff);
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      padding: 20px;
+    }
+
+    #filter-section {
+      margin-bottom: 60px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .filter-tag {
+      background: linear-gradient(135deg, #6200ea, #7b21ff);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .filter-tag:hover {
+      background: linear-gradient(135deg, #4500a0, #5e1bff);
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
+
+    .filter-tag.active {
+      background: linear-gradient(135deg, #4500a0, #5e1bff);
+    }
+
+    #tool-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      gap: 15px;
+    }
+
+    .tool-card {
+      width: 300px;
+      padding: 25px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #fff, #f9f9f9);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      min-height: 280px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .tool-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tool-card:hover {
+      transform: scale(1.05) translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .tool-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .tool-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .tool-image:hover {
+      transform: scale(1.1);
+    }
+
+    .tool-name {
+      font-size: 1.5rem;
+      margin: 0;
+      color: #333;
+    }
+
+    .rating {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: baseline;
+    }
+
+    .rating-score {
+      font-weight: bold;
+      color: #000;
+      margin-right: 2px;
+    }
+
+    .rating-max {
+      color: #888;
+    }
+
+    .tool-description {
+      font-size: 1rem;
+      color: #e67e22;
+      line-height: 1.5;
+      margin: 15px 0;
+      min-height: 48px;
+      display: flex;
+      align-items: center;
+    }
+
+    .tool-features {
+      list-style-type: disc;
+      padding-left: 20px;
+      margin: 15px 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .tool-features li {
+      margin-bottom: 8px;
+    }
+
+    .tool-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+      position: absolute;
+      bottom: 50px;
+      left: 25px;
+    }
+
+    .tag {
+      background-color: #d8c3ff;
+      color: #fff;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease, border 0.3s ease;
+    }
+
+    .tag:hover {
+      transform: scale(1.05);
+      border: 1px solid #6200ea;
+    }
+
+    .official-link {
+      display: inline-block;
+      width: 33%;
+      text-align: center;
+      padding: 8px 0;
+      background: linear-gradient(135deg, #6200ea, #7b21ff);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      position: absolute;
+      bottom: 15px;
+      right: 20px;
+    }
+
+    .official-link:hover {
+      background: linear-gradient(135deg, #4500a0, #5e1bff);
+    }
+
+    /* 추가: 추천 섹션 스타일링 */
+    #recommended-section {
+      width: 100%;
+      padding: 20px;
+      background-color: #f9f9f9;
+      margin-top: 40px;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    #recommended-section h2 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .recommended-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .recommended-tool {
+      width: 200px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .recommended-tool img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .recommended-tool a {
+      color: #6200ea;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .recommended-tool a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      width: 100%;
+      padding: 20px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: #40c4ff;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (min-width: 768px) {
+      main {
+        padding: 40px;
+      }
+
+      #filter-section {
+        margin-bottom: 60px;
+      }
+
+      #tool-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+      }
+
+      .tool-card {
+        margin: 0;
+      }
+    }
+
+    @media (max-width: 767px) {
+      header {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .search-container,
+      .header-actions select {
+        max-width: 90%;
+      }
+
+      #filter-section {
+        margin-bottom: 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header>
+    <div class="header-actions">
+      <select id="sort-select">
+        <option value="rating-desc">평점 높은 순</option>
+        <option value="rating-asc">평점 낮은 순</option>
+        <option value="name-asc">이름순 (A-Z)</option>
+      </select>
+    </div>
+    <div class="search-container">
+      <input type="text" class="header-search" id="search-input" placeholder="툴 검색...">
+      <span class="search-icon">🔍</span>
+    </div>
+  </header>
+
+  <!-- 추가: 광고 배너 -->
+  <div id="ad-banner">
+    <p>광고 배너 공간 (728x90)</p>
+  </div>
+
+  <div id="category-section"></div>
+
+  <!-- 메인 콘텐츠 -->
+  <main>
+    <div id="filter-section"></div>
+    <div id="tool-list"></div>
+  </main>
+
+  <!-- 추가: 추천 섹션 -->
+  <section id="recommended-section">
+    <h2>추천 AI 툴</h2>
+    <div class="recommended-tools">
+      <div class="recommended-tool">
+        <img src="https://via.placeholder.com/30" alt="Recommended Tool 1">
+        <p><a href="https://example.com?aff=your-affiliate-id" target="_blank">추천 툴 1</a></p>
+      </div>
+      <div class="recommended-tool">
+        <img src="https://via.placeholder.com/30" alt="Recommended Tool 2">
+        <p><a href="https://example.com?aff=your-affiliate-id" target="_blank">추천 툴 2</a></p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2025 AI Tool Platform. All rights reserved.</p>
+    <p><a href="#">문의하기</a> | <a href="#">개인정보 처리방침</a> | <a href="#">서비스 약관</a></p>
+  </footer>
+
+  <script>
+    // 수정: tools 데이터를 fetch로 불러오기
+    fetch('tools.json')
+      .then(response => response.json())
+      .then(tools => {
+        const allCategories = [...new Set(tools.map(tool => tool.category))];
+        const allTags = [...new Set(tools.flatMap(tool => tool.tags))];
+
+        const categorySection = document.getElementById("category-section");
+        const allCategory = document.createElement("span");
+        allCategory.className = "category-btn active";
+        allCategory.textContent = "모두 보기";
+        allCategory.addEventListener("click", () => {
+          filterTools(null, null);
+          setActiveCategory(allCategory);
+        });
+        categorySection.appendChild(allCategory);
+
+        allCategories.forEach(category => {
+          const categoryBtn = document.createElement("span");
+          categoryBtn.className = "category-btn";
+          categoryBtn.textContent = category;
+          categoryBtn.addEventListener("click", () => {
+            filterTools(category, null);
+            setActiveCategory(categoryBtn);
+          });
+          categorySection.appendChild(categoryBtn);
+        });
+
+        const filterSection = document.getElementById("filter-section");
+        const allFilter = document.createElement("span");
+        allFilter.className = "filter-tag active";
+        allFilter.textContent = "모두 보기";
+        allFilter.addEventListener("click", () => {
+          const activeCategory = document.querySelector(".category-btn.active").textContent === "모두 보기" ? null : document.querySelector(".category-btn.active").textContent;
+          filterTools(activeCategory, null);
+          setActiveFilter(allFilter);
+        });
+        filterSection.appendChild(allFilter);
+
+        allTags.forEach(tag => {
+          const filterTag = document.createElement("span");
+          filterTag.className = "filter-tag";
+          filterTag.textContent = tag;
+          filterTag.addEventListener("click", () => {
+            const activeCategory = document.querySelector(".category-btn.active").textContent === "모두 보기" ? null : document.querySelector(".category-btn.active").textContent;
+            filterTools(activeCategory, tag);
+            setActiveFilter(filterTag);
+          });
+          filterSection.appendChild(filterTag);
+        });
+
+        const toolList = document.getElementById("tool-list");
+        function renderTools(filteredTools) {
+          const fragment = document.createDocumentFragment();
+          toolList.innerHTML = "";
+
+          filteredTools.forEach(tool => {
+            const card = document.createElement("div");
+            card.className = "tool-card";
+            card.innerHTML = `
+              <div class="tool-header">
+                <div style="display: flex; align-items: center;">
+                  <img src="${tool.image}" alt="${tool.name} Logo" class="tool-image" onerror="this.src='https://via.placeholder.com/40';">
+                  <h2 class="tool-name">${tool.name}</h2>
+                </div>
+                <div class="rating">
+                  <span class="rating-score">${tool.rating}</span>
+                  <span class="rating-max">/5.0</span>
+                </div>
+              </div>
+              <p class="tool-description">${tool.description}</p>
+              <ul class="tool-features">
+                ${tool.features.map(feature => `<li>${feature}</li>`).join("")}
+              </ul>
+              <div class="tool-tags">
+                ${tool.tags.map(tag => `<span class="tag" data-tag="${tag}">${tag}</span>`).join("")}
+              </div>
+              <a href="${tool.affiliateLink || tool.officialLink}" target="_blank" class="official-link">사이트 보기</a>
+            `;
+            fragment.appendChild(card);
+          });
+
+          toolList.appendChild(fragment);
+
+          const cards = document.querySelectorAll(".tool-card");
+          const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          }, { rootMargin: "0px 0px 100px 0px" });
+
+          cards.forEach(card => observer.observe(card));
+
+          document.querySelectorAll(".tag").forEach(tagElement => {
+            tagElement.addEventListener("click", () => {
+              const tag = tagElement.textContent;
+              const activeCategory = document.querySelector(".category-btn.active").textContent === "모두 보기" ? null : document.querySelector(".category-btn.active").textContent;
+              filterTools(activeCategory, tag);
+              const filterTag = Array.from(document.querySelectorAll(".filter-tag")).find(
+                ft => ft.textContent === tag
+              );
+              setActiveFilter(filterTag);
+            });
+          });
+
+          document.querySelectorAll(".official-link").forEach(link => {
+            link.addEventListener("click", function() {
+              console.log(`${this.parentElement.querySelector('.tool-name').textContent} 사이트로 이동합니다!`);
+            });
+          });
+        }
+
+        function filterTools(category, tag) {
+          let filteredTools = tools.slice();
+          const searchQuery = document.getElementById("search-input").value.toLowerCase();
+
+          if (searchQuery) {
+            filteredTools = filteredTools.filter(tool =>
+              tool.name.toLowerCase().includes(searchQuery) ||
+              tool.description.toLowerCase().includes(searchQuery)
+            );
+          }
+
+          if (category) {
+            filteredTools = filteredTools.filter(tool => tool.category === category);
+          }
+
+          if (tag) {
+            filteredTools = filteredTools.filter(tool => tool.tags.includes(tag));
+          }
+
+          const sortOption = document.getElementById("sort-select").value;
+          if (sortOption === "rating-desc") {
+            filteredTools.sort((a, b) => b.rating - a.rating);
+          } else if (sortOption === "rating-asc") {
+            filteredTools.sort((a, b) => a.rating - b.rating);
+          } else if (sortOption === "name-asc") {
+            filteredTools.sort((a, b) => a.name.localeCompare(b.name));
+          }
+
+          renderTools(filteredTools);
+        }
+
+        function setActiveCategory(element) {
+          document.querySelectorAll(".category-btn").forEach(btn => btn.classList.remove("active"));
+          element.classList.add("active");
+        }
+
+        function setActiveFilter(element) {
+          document.querySelectorAll(".filter-tag").forEach(tag => tag.classList.remove("active"));
+          element.classList.add("active");
+        }
+
+        renderTools(tools);
+
+        document.getElementById("search-input").addEventListener("input", () => {
+          const activeCategory = document.querySelector(".category-btn.active").textContent === "모두 보기" ? null : document.querySelector(".category-btn.active").textContent;
+          const activeFilter = document.querySelector(".filter-tag.active").textContent === "모두 보기" ? null : document.querySelector(".filter-tag.active").textContent;
+          filterTools(activeCategory, activeFilter);
+        });
+
+        document.getElementById("sort-select").addEventListener("change", () => {
+          const activeCategory = document.querySelector(".category-btn.active").textContent === "모두 보기" ? null : document.querySelector(".category-btn.active").textContent;
+          const activeFilter = document.querySelector(".filter-tag.active").textContent === "모두 보기" ? null : document.querySelector(".filter-tag.active").textContent;
+          filterTools(activeCategory, activeFilter);
+        });
+      })
+      .catch(error => console.error('툴 데이터를 불러오는 데 실패했습니다:', error));
+  </script>
+</body>
+</html>
